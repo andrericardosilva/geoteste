@@ -5,6 +5,8 @@ var map = L.map('map', {
     zoom: 13
 });
 
+var theMarker = {};
+
 var geojsonFeature = {
     "type": "FeatureCollection",
     "name": "geo-teste",
@@ -137,9 +139,12 @@ map.locate({ setView: true, watch: true, maxZoom: 16 });
 
 function onLocationFound(e) {
     var radius = e.accuracy;
+    
+    if (theMarker != undefined) {
+        map.removeLayer(theMarker);
+    };
 
-    L.marker(e.latlng).addTo(map)
-        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+    theMarker = L.marker(e.latlng).addTo(map).bindPopup("You are within " + radius + " meters from this point").openPopup();
 
     L.circle(e.latlng, radius).addTo(map);
 }

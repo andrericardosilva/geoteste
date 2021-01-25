@@ -5,7 +5,8 @@ var map = L.map('map', {
     zoom: 13
 });
 
-var theMarker = {};
+var theMarker = undefined;
+var radiusMarker = undefined;
 
 var geojsonFeature = {
     "type": "FeatureCollection",
@@ -138,15 +139,18 @@ map.fitBounds(geojson.getBounds());
 map.locate({ setView: true, watch: true, maxZoom: 16 });
 
 function onLocationFound(e) {
-    var radius = e.accuracy;
-    
-    if (theMarker != undefined) {
-        map.removeLayer(theMarker);
-    };
+    var radius = e.accuracy / 2;
 
-    theMarker = L.marker(e.latlng).addTo(map).bindPopup("You are within " + radius + " meters from this point").openPopup();
+    if (theMarker == undefined) {
+        theMarker = L.marker(e.latlng).addTo(map).bindPopup("You are within " + radius + " meters from this point").openPopup();
+        radiusMarker = L.circle(e.latlng, radius).addTo(map);
+    }
+    else {
+        theMarker.setLatLng(e.latlng);
+        radiusMarker.setLatLng(e.latlng);
+        radiusMarker.setRadius(radius);
+    }
 
-    L.circle(e.latlng, radius).addTo(map);
 }
 
 map.on('locationfound', onLocationFound);

@@ -133,7 +133,7 @@ geojson.eachLayer(function (layer) {
 
 map.fitBounds(geojson.getBounds());
 
-map.locate({ setView: true, maxZoom: 16 });
+map.locate({ setView: true, watch: true, maxZoom: 16 });
 
 function onLocationFound(e) {
     var radius = e.accuracy;
